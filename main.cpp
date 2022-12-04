@@ -1,97 +1,91 @@
+#include <iostream>
 #include <GLUT/glut.h>
-
-void display1() {
-    glClearColor(0, 0, 0, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    
-    glBegin(GL_TRIANGLES);
-        glColor3f(1.0f, 0.0f, 0.0f);
-        glVertex2f(-0.6, -0.75);
-        glVertex2f(0.6, -0.75);
-        glVertex2f(0, 0.75);
+#include <OpenGL/OpenGL.h>
+float x1, y1, x2, y2, dx,dy, m, p, c;
+void display2(void)
+{
+    glClear (GL_COLOR_BUFFER_BIT);
     glEnd();
-    
-    glFlush();
-}
-
-void display2() {
-    glClearColor(0, 0, 0, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    
-    glBegin(GL_LINES);
-        glColor3f(0.0f, 1.0f, 0.0f);
-        glVertex2f(-0.5f, -0.5f);
-        glVertex2f(0.5f, -0.5f);
-    
-        glVertex2f(-0.5f, -0.5f);
-        glVertex2f(-0.5f, 0.5f);
-        
-        glVertex2f(0.5f, 0.5f);
-        glVertex2f(0.5f, -0.5f);
-        
-        glVertex2f(0.5f, 0.5f);
-        glVertex2f(-0.5f, 0.5f);
-            
-        glEnd();
-        
-        glFlush();
+    glColor3f(0.0,1.0,0.0);
+    glBegin(GL_POINTS);
+    p=(2*dy)-dx;
+    while(x1<=x2 && y1<=y2){
+        if(p>=0){
+            x1=x1+1;
+            y1=y1+1;
+            glVertex3f((x1/100), (y1/100), 0.0);
+            printf("%0.2f %0.2f\n", x1, y1);
+            p = p+(2*dy) - (2*dx);
+        }
+        else if (p<0){
+            x1=x1+1;
+            printf("%0.2f %0.2f\n", x1, y1);
+            glVertex3f((x1/100), (y1/100), 0.0);
+            p = p+(2*dy);
+        }
     }
-
-void display3() {
-    glClearColor(0, 0, 0, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
-    
-    glBegin(GL_POLYGON);
-        glColor3f(0.0f, 0.0f, 1.0f);
-        glVertex2f(-0.5, -0.5);
-        glVertex2f(0.5, -0.5);
-        glVertex2f(0.5, 0.5);
-        glVertex2f(-0.5, 0.5);
-        glVertex2f(0.9, -0.0);
     glEnd();
-    
+    glFlush();
+}
+void display1(void){
+    glClear (GL_COLOR_BUFFER_BIT);
+    glEnd();
+    glColor3f(0.0,1.0,0.0);
+    glBegin(GL_POINTS);
+    while(x1<=x2 && y1<=y2){
+        if(m < 1){
+            x1 = x1 + 1;
+            y1 = y1 + m;
+            glVertex3f((x1/100), (y1/100), 0.0);
+            printf("%0.2f %0.2f\n", x1, y1);
+        }
+        else if (m > 1){
+            x1 = x1 + (1/m);
+            y1 = y1 + 1;
+            glVertex3f((x1/100), (y1/100), 0.0);
+            printf("%0.2f %0.2f\n", x1, y1);
+        }
+        else{
+            x1 = x1 + 1;
+            y1 = y1 + 1;
+            printf("%0.2f %0.2f\n", x1, y1);
+            glVertex3f((x1/100), (y1/100), 0.0);
+        }
+    }
+    glEnd();
     glFlush();
 }
 
-void display4() {
-    glClearColor(0, 0, 0, 0);
-    glClear(GL_COLOR_BUFFER_BIT);
+int main(int argc, char** argv)
+{
+    printf("1= DDA\n2= Bressenham\nEnter choise:");
+    scanf("%f",&c);
+    printf("Enter point x1:");
+    scanf("%f",&x1);
+    printf("Enter point y1:");
+    scanf("%f",&y1);
+    printf("Enter point y2:");
+    scanf("%f",&x2);
+    printf("Enter point y2:");
+    scanf("%f",&y2);
     
-    glBegin(GL_QUADS);
-        glColor3f(1.0f, 1.0f, 1.0f);
-        glVertex2f(-0.5, -0.5);
-        glVertex2f(0.5, -0.5);
-        glVertex2f(0.5, 0.5);
-        glVertex2f(-0.5, 0.5);
-        glEnd();
+    dx = x2-x1;
+    dy = y2-y1;
+    m = dy/dx;
     
-    glFlush();
-}
-
-
-int main(int argc, char** argv) {
     glutInit(&argc, argv);
+    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+    glutInitWindowSize(500, 500);
+    glutInitWindowPosition(100, 100);
     
-    glutCreateWindow("A Simple Triangle");
-    glutInitWindowPosition(80, 80);
-    glutInitWindowSize(400, 300);
-    glutDisplayFunc(display1);
-    
-    glutCreateWindow("A Simple LINES");
-    glutInitWindowPosition(80, 80);
-    glutInitWindowSize(400, 300);
-    glutDisplayFunc(display2);
-    
-    glutCreateWindow("A Simple Polygon");
-    glutInitWindowPosition(80, 80);
-    glutInitWindowSize(400, 300);
-    glutDisplayFunc(display3);
-    
-    glutCreateWindow("A Simple QUADS");
-    glutInitWindowPosition(80, 80);
-    glutInitWindowSize(400, 300);
-    glutDisplayFunc(display4);
-    
+    if(c==2){
+        glutCreateWindow("Bressenham");
+        glutDisplayFunc(display2);
+    }
+    if(c==1){
+        glutCreateWindow("DDA");
+        glutDisplayFunc(display1);
+    }
     glutMainLoop();
     return 0;
 }
